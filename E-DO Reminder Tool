@@ -1,0 +1,44 @@
+// Function to set up dropdowns and headers in the "Validation" sheet
+function setupDropdownTools() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName("Validation");
+  if (!sheet) {
+    SpreadsheetApp.getUi().alert("Error: Sheet 'Validation' not found.");
+    return;
+  }
+
+  // Clear existing headers in columns O and P
+  sheet.getRange(1, 15).clearContent();  // Clear O1
+  sheet.getRange(1, 16).clearContent();  // Clear P1
+
+  // Set new headers
+  sheet.getRange(1, 15).setValue("Action");         // Column O
+  sheet.getRange(1, 16).setValue("Email Status");   // Column P
+
+  // Create dropdown for column O (Action) starting at O2
+  var actionRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(["Send Email", "Email Sent"], true)
+    .setAllowInvalid(false)
+    .build();
+  var maxRows = sheet.getMaxRows();
+  sheet.getRange(2, 15, maxRows - 1, 1).setDataValidation(actionRule);
+
+  // Apply conditional formatting to column O
+  var oRange = sheet.getRange("O2:O" + maxRows);
+  var ruleOrange = SpreadsheetApp.newConditionalFormatRule()
+    .whenTextEqualTo("Send Email")
+    .setBackground("#FFD580") // Light Orange
+    .setRanges([oRange])
+    .build();
+  var ruleDarkGreen = SpreadsheetApp.newConditionalFormatRule()
+    .whenTextEqualTo("Email Sent")
+    .setBackground("#006400") // Dark Green
+    .setRanges([oRange])
+    .build();
+
+  // Set the conditional formatting rules
+  var rules = [ruleOrange, ruleDarkGreen];
+  sheet.setConditionalFormatRules(rules);
+
+  SpreadsheetApp.getUi().alert("Dropdown tools setup completed in 'Validation' sheet.");
+}
