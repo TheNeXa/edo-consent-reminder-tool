@@ -67,3 +67,6 @@ The script sends a bilingual (Indonesian/English) HTML email with:
 - **Colors**: Modify hex codes in `setupDropdownTools` for different conditional formatting.
 
 ## Repository Structure
+├── src/
+│   └── edo-consent-reminder.gs  # Main Apps Script file
+├── README.md                    # This file
